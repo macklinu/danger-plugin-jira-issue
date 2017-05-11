@@ -1,0 +1,54 @@
+{
+  "name": "danger-plugin-jira-issue",
+  "version": "0.0.0-development",
+  "description": "Danger plugin to link JIRA issue in pull request",
+  "main": "dist/index.js",
+  "scripts": {
+    "precommit": "lint-staged",
+    "commit": "git-cz",
+    "commitmsg": "validate-commit-msg",
+    "build": "babel src --out-dir dist --ignore __tests__,__mocks__",
+    "test": "jest",
+    "prepublish": "npm run build",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/macklinu/danger-plugin-jira-issue.git"
+  },
+  "keywords": [
+    "danger",
+    "danger-plugin",
+    "jira"
+  ],
+  "author": "Macklin Underdown <macklinu@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/macklinu/danger-plugin-jira-issue/issues"
+  },
+  "homepage": "https://github.com/macklinu/danger-plugin-jira-issue#readme",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-jest": "^20.0.1",
+    "babel-preset-es2015": "^6.24.1",
+    "commitizen": "^2.9.6",
+    "cz-conventional-changelog": "^2.0.0",
+    "husky": "^0.13.3",
+    "jest": "^20.0.1",
+    "lint-staged": "^3.4.1",
+    "prettier": "^1.3.1",
+    "semantic-release": "^6.3.6",
+    "validate-commit-msg": "^2.12.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --trailing-comma=all --no-semi",
+      "git add"
+    ]
+  }
+}
