@@ -14,15 +14,20 @@ Install:
 yarn add danger-plugin-jira-issue --dev
 ```
 
-Import and invoke the `jiraIssue()` function in your `dangerfile.js` or `dangerfile.ts`:
+At a glance:
 
 ```js
+// dangerfile.js
 import jiraIssue from 'danger-plugin-jira-issue'
 
 jiraIssue({
-  // TODO options
+  key: 'JIRA',
+  url: 'https://myjira.atlassian.net/browse',
+  emoji: ':paperclip:',
 })
 ```
+
+See the [documentation](https://doc.esdoc.org/github.com/macklinu/danger-plugin-jira-issue/) for detailed information .
 
 ## Development
 
