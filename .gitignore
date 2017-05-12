@@ -64,3 +64,6 @@ typings/
 
 # Distributed source
 dist/
+
+# Generated documentation
+docs/
