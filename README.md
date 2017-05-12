@@ -27,7 +27,11 @@ jiraIssue({
 })
 ```
 
-See the [documentation](https://doc.esdoc.org/github.com/macklinu/danger-plugin-jira-issue/) for detailed information .
+See the [documentation](https://doc.esdoc.org/github.com/macklinu/danger-plugin-jira-issue/) for detailed information.
+
+## Changelog
+
+See the GitHub [release history](https://github.com/macklinu/danger-plugin-jira-issue/releases).
 
 ## Development
 
