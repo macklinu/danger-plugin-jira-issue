@@ -1,4 +1,4 @@
-import jiraIssue from '../'
+import jiraIssue from './'
 
 describe('jiraIssue()', () => {
   beforeEach(() => {
@@ -14,13 +14,13 @@ describe('jiraIssue()', () => {
     expect(() => jiraIssue()).toThrow()
     expect(() => jiraIssue({})).toThrow()
     expect(() => jiraIssue({ key: 'ABC' })).toThrow()
-    expect(() => jiraIssue({ url: 'http://my.jira/browse' })).toThrow()
+    expect(() => jiraIssue({ url: 'https://jira.net/browse' })).toThrow()
   })
   it('warns when PR title is missing JIRA issue key', () => {
     global.danger = { github: { pr: { title: 'Change some things' } } }
     jiraIssue({
       key: 'ABC',
-      url: 'http://my.jira/browse',
+      url: 'https://jira.net/browse',
     })
     expect(global.warn).toHaveBeenCalledWith(
       'Please add the JIRA issue key to the PR title (e.g. ABC-123)',
@@ -32,10 +32,10 @@ describe('jiraIssue()', () => {
     }
     jiraIssue({
       key: 'ABC',
-      url: 'http://my.jira/browse',
+      url: 'https://jira.net/browse',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':link: <a href="http:/my.jira/browse/ABC-808">ABC-808</a>',
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>',
     )
   })
   it('properly concatenates URL parts (trailing slash in url)', () => {
@@ -44,20 +44,20 @@ describe('jiraIssue()', () => {
     }
     jiraIssue({
       key: 'ABC',
-      url: 'http://my.jira/browse/',
+      url: 'https://jira.net/browse/',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':link: <a href="http:/my.jira/browse/ABC-808">ABC-808</a>',
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>',
     )
   })
   it('matches JIRA issue anywhere in title', () => {
     global.danger = { github: { pr: { title: 'My changes - ABC-123' } } }
     jiraIssue({
       key: 'ABC',
-      url: 'http://my.jira/browse',
+      url: 'https://jira.net/browse',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':link: <a href="http:/my.jira/browse/ABC-123">ABC-123</a>',
+      ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>',
     )
   })
   it('does not match lowercase JIRA key in PR title', () => {
@@ -66,7 +66,7 @@ describe('jiraIssue()', () => {
     }
     jiraIssue({
       key: 'ABC',
-      url: 'http://my.jira/browse',
+      url: 'https://jira.net/browse',
     })
     expect(global.warn).toHaveBeenCalled()
   })
@@ -74,11 +74,11 @@ describe('jiraIssue()', () => {
     global.danger = { github: { pr: { title: '(ABC-123) Change stuff' } } }
     jiraIssue({
       key: 'ABC',
-      url: 'http://my.jira/browse',
+      url: 'https://jira.net/browse',
       emoji: ':paperclip:',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':paperclip: <a href="http:/my.jira/browse/ABC-123">ABC-123</a>',
+      ':paperclip: <a href="https://jira.net/browse/ABC-123">ABC-123</a>',
     )
   })
 })

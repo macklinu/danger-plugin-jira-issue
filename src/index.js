@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { resolve } from 'url'
 
 const link = (href, text) => `<a href="${href}">${text}</a>`
 
@@ -21,8 +21,11 @@ export default function jiraIssue({ key, url, emoji = ':link:' } = {}) {
   const jiraKeyRegex = new RegExp(`^.*(${key}-[0-9]+).*$`, 'g')
   const match = jiraKeyRegex.exec(danger.github.pr.title)
   if (match) {
-    const jiraIssue = match[1]
-    const jiraUrl = link(join(url, jiraIssue), jiraIssue)
+    const issue = match[1]
+    if (!url.endsWith('/')) {
+      url += '/'
+    }
+    const jiraUrl = link(resolve(url, issue), issue)
     message(`${emoji} ${jiraUrl}`)
   } else {
     warn(`Please add the JIRA issue key to the PR title (e.g. ${key}-123)`)
