@@ -4,6 +4,10 @@
   "description": "Danger plugin to link JIRA issue in pull request",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types/index.d.ts"
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "commit": "git-cz",
