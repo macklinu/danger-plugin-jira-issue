@@ -73,9 +73,9 @@ describe('jiraIssue()', () => {
   it('honors custom emoji configuration', () => {
     global.danger = { github: { pr: { title: '(ABC-123) Change stuff' } } }
     jiraIssue({
+      emoji: ':paperclip:',
       key: 'ABC',
       url: 'https://jira.net/browse',
-      emoji: ':paperclip:',
     })
     expect(global.message).toHaveBeenCalledWith(
       ':paperclip: <a href="https://jira.net/browse/ABC-123">ABC-123</a>',
