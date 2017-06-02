@@ -81,4 +81,17 @@ describe('jiraIssue()', () => {
       ':paperclip: <a href="https://jira.net/browse/ABC-123">ABC-123</a>',
     )
   })
+  it('supports multiple JIRA keys in PR title', () => {
+    global.danger = {
+      github: { pr: { title: '[ABC-123][ABC-456] Change some things' } },
+    }
+    jiraIssue({
+      key: 'ABC',
+      url: 'https://jira.net/browse',
+    })
+    expect(global.message).toHaveBeenCalledWith(
+      // tslint:disable-next-line:max-line-length
+      ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>, <a href="https://jira.net/browse/ABC-456">ABC-456</a>',
+    )
+  })
 })

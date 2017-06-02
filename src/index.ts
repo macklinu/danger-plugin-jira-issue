@@ -38,12 +38,18 @@ export default function jiraIssue(options: Options) {
     throw Error(`'key' missing - must supply JIRA issue key`)
   }
 
-  const jiraKeyRegex = new RegExp(`^.*(${key}-[0-9]+).*$`, 'g')
-  const match = jiraKeyRegex.exec(danger.github.pr.title)
-  if (match) {
-    const issue = match[1]
-    const jiraUrl = link(resolve(ensureUrlEndsWithSlash(url), issue), issue)
-    message(`${emoji} ${jiraUrl}`)
+  const jiraKeyRegex = new RegExp(`(${key}-[0-9]+)`, 'g')
+  let match
+  const jiraIssues = []
+  // tslint:disable-next-line:no-conditional-assignment
+  while ((match = jiraKeyRegex.exec(danger.github.pr.title)) != null) {
+    jiraIssues.push(match[0])
+  }
+  if (jiraIssues.length > 0) {
+    const jiraUrls = jiraIssues
+      .map((issue) => link(resolve(ensureUrlEndsWithSlash(url), issue), issue))
+      .join(', ')
+    message(`${emoji} ${jiraUrls}`)
   } else {
     warn(`Please add the JIRA issue key to the PR title (e.g. ${key}-123)`)
   }
