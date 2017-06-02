@@ -42,9 +42,6 @@
   "devDependencies": {
     "@types/jest": "^19.2.3",
     "@types/node": "^7.0.23",
-    "babel-cli": "^6.24.1",
-    "babel-jest": "^20.0.1",
-    "babel-preset-env": "^1.4.0",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
     "gh-pages": "^1.0.0",
