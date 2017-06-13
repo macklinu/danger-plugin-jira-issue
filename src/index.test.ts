@@ -1,5 +1,7 @@
 import jiraIssue from './'
 
+declare const global: any
+
 describe('jiraIssue()', () => {
   beforeEach(() => {
     global.warn = jest.fn()
@@ -11,10 +13,11 @@ describe('jiraIssue()', () => {
     global.message = undefined
   })
   it('throws when supplied invalid configuration', () => {
-    expect(() => jiraIssue()).toThrow()
-    expect(() => jiraIssue({})).toThrow()
-    expect(() => jiraIssue({ key: 'ABC' })).toThrow()
-    expect(() => jiraIssue({ url: 'https://jira.net/browse' })).toThrow()
+    const anyJira = jiraIssue as any
+    expect(() => anyJira()).toThrow()
+    expect(() => jiraIssue({} as any)).toThrow()
+    expect(() => jiraIssue({ key: 'ABC' } as any)).toThrow()
+    expect(() => jiraIssue({ url: 'https://jira.net/browse' } as any)).toThrow()
   })
   it('warns when PR title is missing JIRA issue key', () => {
     global.danger = { github: { pr: { title: 'Change some things' } } }
