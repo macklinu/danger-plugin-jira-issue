@@ -16,7 +16,7 @@
     "docs:deploy": "npm run docs && node scripts/deploy-docs.js",
     "build": "tsc -p tsconfig.json",
     "lint": "tslint 'src/**/*.ts'",
-    "test": "jest",
+    "test": "jest --env=node",
     "predocs": "rm -rf docs/",
     "prepublish": "npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
