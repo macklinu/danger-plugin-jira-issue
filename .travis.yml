@@ -13,6 +13,7 @@ before_script:
   - greenkeeper-lockfile-update
   - npm prune
 script:
+  - yarn add jest
   - yarn test
 after_script:
   - greenkeeper-lockfile-upload
