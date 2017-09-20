@@ -26,7 +26,7 @@ describe('jiraIssue()', () => {
       url: 'https://jira.net/browse',
     })
     expect(global.warn).toHaveBeenCalledWith(
-      'Please add the JIRA issue key to the PR title (e.g. ABC-123)',
+      'Please add the JIRA issue key to the PR title (e.g. ABC-123)'
     )
   })
   it('adds the JIRA issue link to the messages table', () => {
@@ -38,7 +38,7 @@ describe('jiraIssue()', () => {
       url: 'https://jira.net/browse',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>',
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>'
     )
   })
   it('properly concatenates URL parts (trailing slash in url)', () => {
@@ -50,7 +50,7 @@ describe('jiraIssue()', () => {
       url: 'https://jira.net/browse/',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>',
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>'
     )
   })
   it('matches JIRA issue anywhere in title', () => {
@@ -60,7 +60,7 @@ describe('jiraIssue()', () => {
       url: 'https://jira.net/browse',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>',
+      ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>'
     )
   })
   it('does not match lowercase JIRA key in PR title', () => {
@@ -81,7 +81,7 @@ describe('jiraIssue()', () => {
       url: 'https://jira.net/browse',
     })
     expect(global.message).toHaveBeenCalledWith(
-      ':paperclip: <a href="https://jira.net/browse/ABC-123">ABC-123</a>',
+      ':paperclip: <a href="https://jira.net/browse/ABC-123">ABC-123</a>'
     )
   })
   it('supports multiple JIRA keys in PR title', () => {
@@ -93,8 +93,19 @@ describe('jiraIssue()', () => {
       url: 'https://jira.net/browse',
     })
     expect(global.message).toHaveBeenCalledWith(
-      // tslint:disable-next-line:max-line-length
-      ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>, <a href="https://jira.net/browse/ABC-456">ABC-456</a>',
+      ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>, <a href="https://jira.net/browse/ABC-456">ABC-456</a>'
+    )
+  })
+  it('supports multiple JIRA boards in PR title', () => {
+    global.danger = {
+      github: { pr: { title: '[ABC-123][DEF-456] Change some things' } },
+    }
+    jiraIssue({
+      key: ['ABC', 'DEF'],
+      url: 'https://jira.net/browse',
+    })
+    expect(global.message).toHaveBeenCalledWith(
+      ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>, <a href="https://jira.net/browse/DEF-456">DEF-456</a>'
     )
   })
 })

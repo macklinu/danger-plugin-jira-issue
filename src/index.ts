@@ -1,8 +1,11 @@
 import { resolve } from 'url'
 
 export interface Options {
-  /** The JIRA issue key (e.g. the ABC in ABC-123). */
-  key: string
+  /**
+   * The JIRA issue key(s) (e.g. the ABC in ABC-123).
+   * Supports multiple JIRA projects (e.g. `['ABC', 'DEF']`).
+   */
+  key: string | string[]
   /** The JIRA instance issue base URL (e.g. https://jira.atlassian.com/browse/). */
   url: string
   /**
@@ -14,11 +17,12 @@ export interface Options {
   emoji?: string
 }
 
-const link = (href: string, text: string): string => `<a href="${href}">${text}</a>`
+const link = (href: string, text: string): string =>
+  `<a href="${href}">${text}</a>`
 
 const ensureUrlEndsWithSlash = (url: string) => {
   if (!url.endsWith('/')) {
-      return url.concat('/')
+    return url.concat('/')
   }
   return url
 }
@@ -38,7 +42,10 @@ export default function jiraIssue(options: Options) {
     throw Error(`'key' missing - must supply JIRA issue key`)
   }
 
-  const jiraKeyRegex = new RegExp(`(${key}-[0-9]+)`, 'g')
+  // Support multiple JIRA projects.
+  const keys = Array.isArray(key) ? `(${key.join('|')})` : key
+
+  const jiraKeyRegex = new RegExp(`(${keys}-[0-9]+)`, 'g')
   let match
   const jiraIssues = []
   // tslint:disable-next-line:no-conditional-assignment
@@ -47,7 +54,7 @@ export default function jiraIssue(options: Options) {
   }
   if (jiraIssues.length > 0) {
     const jiraUrls = jiraIssues
-      .map((issue) => link(resolve(ensureUrlEndsWithSlash(url), issue), issue))
+      .map(issue => link(resolve(ensureUrlEndsWithSlash(url), issue), issue))
       .join(', ')
     message(`${emoji} ${jiraUrls}`)
   } else {
