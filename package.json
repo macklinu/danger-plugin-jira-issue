@@ -43,11 +43,11 @@
     "husky": "^0.14.1",
     "jest": "^21.2.1",
     "lint-staged": "^4.0.0",
-    "prettier": "^1.7.0",
+    "prettier": "^1.7.4",
     "semantic-release": "^6.3.6",
     "ts-jest": "^21.1.3",
     "tslint": "^5.4.2",
-    "tslint-config-prettier": "^1.5.0",
+    "tslint-config-prettier": "^1.6.0",
     "typedoc": "^0.7.1",
     "typescript": "^2.5.2",
     "validate-commit-msg": "^2.12.1"
@@ -68,6 +68,7 @@
     }
   },
   "lint-staged": {
-    "*.ts": ["tslint --fix", "git add"]
+    "*.ts": ["prettier --write", "tslint --fix", "git add"],
+    "*.json": ["prettier --write", "git add"]
   }
 }
