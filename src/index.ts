@@ -15,6 +15,13 @@ export interface Options {
    * Defaults to `':link:'`.
    */
   emoji?: string;
+  /**
+   * A format function to format the message
+   * @param {string} emoji
+   * @param {string[]} jiraUrls
+   * @returns {string}
+   */
+  format?: (emoji: string, jiraUrls: string[]) => string;
 }
 
 const link = (href: string, text: string): string =>
@@ -53,10 +60,16 @@ export default function jiraIssue(options: Options) {
     jiraIssues.push(match[0]);
   }
   if (jiraIssues.length > 0) {
-    const jiraUrls = jiraIssues
-      .map(issue => link(resolve(ensureUrlEndsWithSlash(url), issue), issue))
-      .join(", ");
-    message(`${emoji} ${jiraUrls}`);
+    const jiraUrls = jiraIssues.map(issue =>
+      link(resolve(ensureUrlEndsWithSlash(url), issue), issue)
+    );
+
+    // use custom formatter, or default
+    if (options.format) {
+      message(options.format(emoji, jiraUrls));
+    } else {
+      message(`${emoji} ${jiraUrls.join(", ")}`);
+    }
   } else {
     warn(`Please add the JIRA issue key to the PR title (e.g. ${key}-123)`);
   }
