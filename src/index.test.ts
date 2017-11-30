@@ -110,4 +110,19 @@ describe("jiraIssue()", () => {
       ':link: <a href="https://jira.net/browse/ABC-123">ABC-123</a>, <a href="https://jira.net/browse/DEF-456">DEF-456</a>'
     );
   });
+  it("supports a custom format function", () => {
+    global.danger = {
+      github: { pr: { title: "[ABC-123][DEF-456] Change some things" } }
+    };
+    jiraIssue({
+      format: (emoji, jiraUrls) => {
+        return `${emoji} JIRA Tickets: ${jiraUrls.join(", ")}`;
+      },
+      key: ["ABC", "DEF"],
+      url: "https://jira.net/browse"
+    });
+    expect(global.message).toHaveBeenCalledWith(
+      ':link: JIRA Tickets: <a href="https://jira.net/browse/ABC-123">ABC-123</a>, <a href="https://jira.net/browse/DEF-456">DEF-456</a>'
+    );
+  });
 });
