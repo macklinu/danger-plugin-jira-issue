@@ -53,7 +53,7 @@
     "validate-commit-msg": "^2.12.1"
   },
   "optionalDependencies": {
-    "serve": "^6.0.0"
+    "serve": "^7.0.0"
   },
   "jest": {
     "transform": {
