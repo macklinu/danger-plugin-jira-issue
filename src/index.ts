@@ -22,6 +22,11 @@ export interface Options {
    * @returns {string}
    */
   format?: (emoji: string, jiraUrls: string[]) => string;
+  /**
+   * The location of the JIRA issue, either the PR title, or the git branch
+   * Defaults to `title`
+   */
+  location?: "title" | "branch";
 }
 
 const link = (href: string, text: string): string =>
@@ -41,7 +46,8 @@ const ensureUrlEndsWithSlash = (url: string) => {
  * to include the JIRA issue identifier in the pull request title.
  */
 export default function jiraIssue(options: Options) {
-  const { key = "", url = "", emoji = ":link:" } = options || {};
+  const { key = "", url = "", emoji = ":link:", location = "title" } =
+    options || {};
   if (!url) {
     throw Error(`'url' missing - must supply JIRA installation URL`);
   }
@@ -56,8 +62,26 @@ export default function jiraIssue(options: Options) {
   let match;
   const jiraIssues = [];
   // tslint:disable-next-line:no-conditional-assignment
-  while ((match = jiraKeyRegex.exec(danger.github.pr.title)) != null) {
+  let jiraLocation;
+  switch (location) {
+    case "title": {
+      jiraLocation = danger.github.pr.title;
+      break;
+    }
+    case "branch": {
+      jiraLocation = danger.github.pr.head.ref;
+      break;
+    }
+    default: {
+      throw Error(
+        `Invalid value for 'location', must be either "title" or "branch"`
+      );
+    }
+  }
+  match = jiraKeyRegex.exec(jiraLocation);
+  while (match != null) {
     jiraIssues.push(match[0]);
+    match = jiraKeyRegex.exec(jiraLocation);
   }
   if (jiraIssues.length > 0) {
     const jiraUrls = jiraIssues.map(issue =>
@@ -71,6 +95,8 @@ export default function jiraIssue(options: Options) {
       message(`${emoji} ${jiraUrls.join(", ")}`);
     }
   } else {
-    warn(`Please add the JIRA issue key to the PR title (e.g. ${key}-123)`);
+    warn(
+      `Please add the JIRA issue key to the PR ${location} (e.g. ${key}-123)`
+    );
   }
 }

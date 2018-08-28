@@ -125,4 +125,17 @@ describe("jiraIssue()", () => {
       ':link: JIRA Tickets: <a href="https://jira.net/browse/ABC-123">ABC-123</a>, <a href="https://jira.net/browse/DEF-456">DEF-456</a>'
     );
   });
+  it("supports JIRA key in the git branch", () => {
+    global.danger = {
+      github: { pr: { head: { ref: "ABC-808/some-things" } } }
+    };
+    jiraIssue({
+      key: "ABC",
+      location: "branch",
+      url: "https://jira.net/browse"
+    });
+    expect(global.message).toHaveBeenCalledWith(
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>'
+    );
+  });
 });

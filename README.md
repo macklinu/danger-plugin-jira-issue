@@ -26,8 +26,9 @@ jiraIssue({
   url: 'https://myjira.atlassian.net/browse',
   emoji: ':paperclip:',
   format(emoji, jiraUrls) { // Optional Formatter
-    return 'Some Custom Message'; 
-  }
+    return 'Some Custom Message';
+  },
+  location: 'title' // Optional location, either 'title' or 'branch'
 })
 ```
 
