@@ -39,7 +39,7 @@
     "@types/node": "^8.0.6",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
-    "gh-pages": "^1.0.0",
+    "gh-pages": "^2.0.0",
     "husky": "^0.14.1",
     "jest": "^21.2.1",
     "lint-staged": "^4.0.0",
