@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "precommit": "lint-staged",
-    "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
     "docs": "typedoc --theme minimal --out docs src/index.ts",
     "docs:serve": "npm run docs && npx serve docs",
@@ -42,8 +41,6 @@
   "devDependencies": {
     "@types/jest": "^21.1.4",
     "@types/node": "^8.0.6",
-    "commitizen": "^2.9.6",
-    "cz-conventional-changelog": "^2.0.0",
     "gh-pages": "^1.0.0",
     "husky": "^0.14.1",
     "jest": "^21.2.1",
@@ -67,11 +64,6 @@
       "tsx",
       "js"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
   },
   "lint-staged": {
     "*.ts": [
