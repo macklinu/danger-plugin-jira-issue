@@ -26,7 +26,8 @@ jiraIssue({
   format(emoji, jiraUrls) {
     // Optional Formatter
     return "Some Custom Message";
-  }
+  },
+  location: "title" // Optional location, either 'title' or 'branch'
 });
 ```
 
