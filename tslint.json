@@ -1,11 +1,3 @@
 {
-  "extends": [
-    "tslint:recommended",
-    "tslint-config-prettier",
-    "tslint-plugin-prettier"
-  ],
-  "rules": {
-    "prettier": true,
-    "interface-name": [true, "never-prefix"]
-  }
+  "extends": ["tslint-config-macklinu"]
 }
