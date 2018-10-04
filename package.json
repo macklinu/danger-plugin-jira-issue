@@ -4,27 +4,32 @@
   "description": "Danger plugin to link JIRA issue in pull request",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
     "docs": "typedoc --theme minimal --out docs src/index.ts",
-    "docs:serve": "npm run docs && serve docs",
+    "docs:serve": "npm run docs && npx serve docs",
     "docs:deploy": "npm run docs && node scripts/deploy-docs.js",
     "build": "tsc -p tsconfig.json",
     "lint": "tslint 'src/**/*.ts'",
     "test": "jest --env=node",
     "predocs": "rm -rf docs/",
     "prepublish": "npm run build",
-    "semantic-release":
-      "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/macklinu/danger-plugin-jira-issue.git"
   },
-  "keywords": ["danger", "danger-plugin", "jira"],
+  "keywords": [
+    "danger",
+    "danger-plugin",
+    "jira"
+  ],
   "author": "Macklin Underdown <macklinu@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -43,24 +48,25 @@
     "husky": "^0.14.1",
     "jest": "^21.2.1",
     "lint-staged": "^4.0.0",
-    "prettier": "^1.7.4",
+    "prettier": "^1.14.3",
     "semantic-release": "^6.3.6",
     "ts-jest": "^21.1.3",
-    "tslint": "^5.4.2",
-    "tslint-config-prettier": "^1.6.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
     "typedoc": "^0.7.1",
     "typescript": "^2.5.2",
     "validate-commit-msg": "^2.12.1"
-  },
-  "optionalDependencies": {
-    "serve": "^6.0.0"
   },
   "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "tsx", "js"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   },
   "config": {
     "commitizen": {
@@ -68,7 +74,14 @@
     }
   },
   "lint-staged": {
-    "*.ts": ["prettier --write", "tslint --fix", "git add"],
-    "*.json": ["prettier --write", "git add"]
+    "*.ts": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
