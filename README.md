@@ -61,8 +61,6 @@ jiraIssue({
 
 This plugin will recognize issues starting with those keys (e.g. `ABC-123` and `DEF-234`).
 
-See the [documentation](http://macklinu.github.io/danger-plugin-jira-issue) for detailed information.
-
 ## Changelog
 
 See the GitHub [release history](https://github.com/macklinu/danger-plugin-jira-issue/releases).
