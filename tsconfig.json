@@ -2,6 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "dist",
+    "downlevelIteration": true,
     "lib": ["es5", "es2015"],
     "module": "commonjs",
     "moduleResolution": "node",
