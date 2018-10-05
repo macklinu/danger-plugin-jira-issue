@@ -9,35 +9,22 @@ export interface Options {
   /** The JIRA instance issue base URL (e.g. https://jira.atlassian.com/browse/). */
   url: string
   /**
-   * The emoji to display with the JIRA issue link.
-   * See the possible emoji values, listed as keys in the
-   * [GitHub API `/emojis` response](https://api.github.com/emojis).
-   * Defaults to `':link:'`.
-   */
-  emoji?: string
-  /**
    * A format function to format the message
-   * @param {string} emoji
    * @param {string[]} jiraUrls
    * @returns {string}
    */
-  format?: (emoji: string, jiraUrls: string[]) => string
-  /**
-   * The location of the JIRA issue, either the PR title, or the git branch
-   * Defaults to `title`
-   */
-  location?: 'title' | 'branch'
+  format?: (jiraUrls: string[]) => string
 }
 
-const link = (href: string, text: string): string =>
-  `<a href="${href}">${text}</a>`
-
-const ensureUrlEndsWithSlash = (url: string) => {
-  if (!url.endsWith('/')) {
-    return url.concat('/')
-  }
-  return url
+function link(href: string, text: string): string {
+  return `<a href="${href}">${text}</a>`
 }
+
+function ensureUrlEndsWithSlash(url: string): string {
+  return url.endsWith('/') ? url : url.concat('/')
+}
+
+const defaultFormat = (urls: string[]) => `:link: ${urls.join(', ')}`
 
 /**
  * A Danger plugin to add a JIRA issue link to the Danger pull request comment.
@@ -45,9 +32,9 @@ const ensureUrlEndsWithSlash = (url: string) => {
  * then Danger will comment with a warning on the pull request asking the developer
  * to include the JIRA issue identifier in the pull request title.
  */
-export default function jiraIssue(options: Options) {
-  const { key = '', url = '', emoji = ':link:', location = 'title' } =
-    options || {}
+export default function jiraIssue(
+  { key, url, format = defaultFormat }: Options = {} as Options
+) {
   if (!url) {
     throw Error(`'url' missing - must supply JIRA installation URL`)
   }
@@ -55,48 +42,39 @@ export default function jiraIssue(options: Options) {
     throw Error(`'key' missing - must supply JIRA issue key`)
   }
 
+  function findMatches(property: string): string[] {
+    const issues: string[] = []
+
+    let match = jiraKeyRegex.exec(property)
+    while (match !== null) {
+      issues.push(match[0].toLowerCase())
+      match = jiraKeyRegex.exec(property)
+    }
+
+    return issues
+  }
+
   // Support multiple JIRA projects.
   const keys = Array.isArray(key) ? `(${key.join('|')})` : key
 
-  const jiraKeyRegex = new RegExp(`(${keys}-[0-9]+)`, 'g')
-  let match
-  const jiraIssues = []
-  // tslint:disable-next-line:no-conditional-assignment
-  let jiraLocation
-  switch (location) {
-    case 'title': {
-      jiraLocation = danger.github.pr.title
-      break
-    }
-    case 'branch': {
-      jiraLocation = danger.github.pr.head.ref
-      break
-    }
-    default: {
-      throw Error(
-        `Invalid value for 'location', must be either "title" or "branch"`
-      )
-    }
-  }
-  match = jiraKeyRegex.exec(jiraLocation)
-  while (match != null) {
-    jiraIssues.push(match[0])
-    match = jiraKeyRegex.exec(jiraLocation)
-  }
-  if (jiraIssues.length > 0) {
-    const jiraUrls = jiraIssues.map(issue =>
-      link(resolve(ensureUrlEndsWithSlash(url), issue), issue)
-    )
+  const jiraKeyRegex = new RegExp(`(${keys}-[0-9]+)`, 'gi')
 
-    // use custom formatter, or default
-    if (options.format) {
-      message(options.format(emoji, jiraUrls))
-    } else {
-      message(`${emoji} ${jiraUrls.join(', ')}`)
-    }
+  const allIssues = new Set([
+    ...findMatches(danger.github.pr.title),
+    ...findMatches(danger.github.pr.head.ref),
+  ])
+
+  if (allIssues.size > 0) {
+    // URL must end with a slash before attempting to fully resolve the JIRA URL.
+    url = ensureUrlEndsWithSlash(url)
+    const jiraUrls = Array.from(allIssues).map(issue => {
+      const formattedIssue = issue.toUpperCase()
+      const resolvedUrl = resolve(url, formattedIssue)
+      return link(resolvedUrl, formattedIssue)
+    })
+    message(format(jiraUrls))
   } else {
-    warn(
-      `Please add the JIRA issue key to the PR ${location} (e.g. ${key}-123)`
-    )
+    const warningMessage = `No JIRA keys found in the PR title, branch name, or commit messages (e.g. ${key}-123).`
+    warn(warningMessage)
   }
 }

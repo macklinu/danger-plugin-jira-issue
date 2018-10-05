@@ -17,18 +17,12 @@ At a glance:
 
 ```js
 // dangerfile.js
-import jiraIssue from "danger-plugin-jira-issue";
+import jiraIssue from 'danger-plugin-jira-issue'
 
 jiraIssue({
-  key: "JIRA",
-  url: "https://myjira.atlassian.net/browse",
-  emoji: ":paperclip:",
-  format(emoji, jiraUrls) {
-    // Optional Formatter
-    return "Some Custom Message";
-  },
-  location: "title" // Optional location, either 'title' or 'branch'
-});
+  key: 'JIRA',
+  url: 'https://myjira.atlassian.net/browse',
+})
 ```
 
 With JIRA-123 in the PR title, Danger will comment with:
@@ -55,12 +49,24 @@ If you work with multiple JIRA project boards, you can supply multiple project k
 
 ```js
 jiraIssue({
-  key: ["ABC", "DEF"],
-  url: "https://myjira.atlassian.net/browse"
-});
+  key: ['ABC', 'DEF'],
+  url: 'https://myjira.atlassian.net/browse',
+})
 ```
 
 This plugin will recognize issues starting with those keys (e.g. `ABC-123` and `DEF-234`).
+
+You can also supply an optional `format` option, which is a function that receives an array of formatted JIRA URLs and returns a string.
+
+```js
+jiraIssue({
+  key: 'ABC',
+  url: 'https://myjira.atlassian.net/browse',
+  format(urls) {
+    return `Check out these awesome tickets: ${urls.join(', ')}`
+  },
+})
+```
 
 ## Changelog
 
