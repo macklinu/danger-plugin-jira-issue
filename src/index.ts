@@ -95,8 +95,9 @@ export default function jiraIssue(options: Options) {
       message(`${emoji} ${jiraUrls.join(', ')}`)
     }
   } else {
+    const firstKey = Array.isArray(key) ? key[0] : key
     warn(
-      `Please add the JIRA issue key to the PR ${location} (e.g. ${key}-123)`
+      `Please add the JIRA issue key to the PR ${location} (e.g. ${firstKey}-123)`
     )
   }
 }
