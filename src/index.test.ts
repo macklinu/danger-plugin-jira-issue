@@ -29,6 +29,16 @@ describe('jiraIssue()', () => {
       'Please add the JIRA issue key to the PR title (e.g. ABC-123)'
     )
   })
+  it('only adds one example key to warning', () => {
+    global.danger = { github: { pr: { title: 'Change some things' } } }
+    jiraIssue({
+      key: ['ABC', 'DEF'],
+      url: 'https://jira.net/browse',
+    })
+    expect(global.warn).toHaveBeenCalledWith(
+      'Please add the JIRA issue key to the PR title (e.g. ABC-123)'
+    )
+  })
   it('adds the JIRA issue link to the messages table', () => {
     global.danger = {
       github: { pr: { title: '[ABC-808] Change some things' } },
