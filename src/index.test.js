@@ -1,7 +1,5 @@
 import jiraIssue from './'
 
-declare const global: any
-
 describe('jiraIssue()', () => {
   beforeEach(() => {
     global.warn = jest.fn()
@@ -13,11 +11,11 @@ describe('jiraIssue()', () => {
     global.message = undefined
   })
   it('throws when supplied invalid configuration', () => {
-    const anyJira = jiraIssue as any
+    const anyJira = jiraIssue
     expect(() => anyJira()).toThrow()
-    expect(() => jiraIssue({} as any)).toThrow()
-    expect(() => jiraIssue({ key: 'ABC' } as any)).toThrow()
-    expect(() => jiraIssue({ url: 'https://jira.net/browse' } as any)).toThrow()
+    expect(() => jiraIssue({})).toThrow()
+    expect(() => jiraIssue({ key: 'ABC' })).toThrow()
+    expect(() => jiraIssue({ url: 'https://jira.net/browse' })).toThrow()
   })
   it('warns when PR title is missing JIRA issue key', () => {
     global.danger = { github: { pr: { title: 'Change some things' } } }
@@ -136,6 +134,48 @@ describe('jiraIssue()', () => {
   it('supports JIRA key in the git branch', () => {
     global.danger = {
       github: { pr: { head: { ref: 'ABC-808/some-things' } } },
+    }
+    jiraIssue({
+      key: 'ABC',
+      location: 'branch',
+      url: 'https://jira.net/browse',
+    })
+    expect(global.message).toHaveBeenCalledWith(
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>'
+    )
+  })
+  it('correctly identifies the repository type when the other type is an empty object', () => {
+    global.danger = {
+      github: {},
+      gitlab: { mr: { source_branch: 'ABC-808/some-things' } },
+    }
+    jiraIssue({
+      key: 'ABC',
+      location: 'branch',
+      url: 'https://jira.net/browse',
+    })
+    expect(global.message).toHaveBeenCalledWith(
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>'
+    )
+  })
+  it('correctly identifies the repository type when the other type is undefined', () => {
+    global.danger = {
+      github: undefined,
+      gitlab: { mr: { source_branch: 'ABC-808/some-things' } },
+    }
+    jiraIssue({
+      key: 'ABC',
+      location: 'branch',
+      url: 'https://jira.net/browse',
+    })
+    expect(global.message).toHaveBeenCalledWith(
+      ':link: <a href="https://jira.net/browse/ABC-808">ABC-808</a>'
+    )
+  })
+  it('correctly identifies the repository type when the other type is an empty string', () => {
+    global.danger = {
+      github: "",
+      gitlab: { mr: { source_branch: 'ABC-808/some-things' } },
     }
     jiraIssue({
       key: 'ABC',

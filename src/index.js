@@ -1,42 +1,19 @@
 import { resolve } from 'url'
 
-export interface Options {
-  /**
-   * The JIRA issue key(s) (e.g. the ABC in ABC-123).
-   * Supports multiple JIRA projects (e.g. `['ABC', 'DEF']`).
-   */
-  key: string | string[]
-  /** The JIRA instance issue base URL (e.g. https://jira.atlassian.com/browse/). */
-  url: string
-  /**
-   * The emoji to display with the JIRA issue link.
-   * See the possible emoji values, listed as keys in the
-   * [GitHub API `/emojis` response](https://api.github.com/emojis).
-   * Defaults to `':link:'`.
-   */
-  emoji?: string
-  /**
-   * A format function to format the message
-   * @param {string} emoji
-   * @param {string[]} jiraUrls
-   * @returns {string}
-   */
-  format?: (emoji: string, jiraUrls: string[]) => string
-  /**
-   * The location of the JIRA issue, either the PR title, or the git branch
-   * Defaults to `title`
-   */
-  location?: 'title' | 'branch'
-}
 
-const link = (href: string, text: string): string =>
+const link = (href, text) =>
   `<a href="${href}">${text}</a>`
 
-const ensureUrlEndsWithSlash = (url: string) => {
+const ensureUrlEndsWithSlash = (url) => {
   if (!url.endsWith('/')) {
     return url.concat('/')
   }
   return url
+}
+
+const isObject = (value) => {
+  const type = typeof value;
+  return value != null && (type == 'object' || type == 'function');
 }
 
 /**
@@ -45,7 +22,7 @@ const ensureUrlEndsWithSlash = (url: string) => {
  * then Danger will comment with a warning on the pull request asking the developer
  * to include the JIRA issue identifier in the pull request title.
  */
-export default function jiraIssue(options: Options) {
+export default function jiraIssue(options) {
   const { key = '', url = '', emoji = ':link:', location = 'title' } =
     options || {}
   if (!url) {
@@ -55,21 +32,37 @@ export default function jiraIssue(options: Options) {
     throw Error(`'key' missing - must supply JIRA issue key`)
   }
 
+  const repositoryType = [
+    "github",
+    "gitlab"
+  ].find(type => isObject(danger?.[type]) && Object.keys(danger[type]).length > 0)
+
+  if (repositoryType === undefined) {
+    throw Error(
+      `Could not detect the repository's type.`
+    )
+  }
+
   // Support multiple JIRA projects.
   const keys = Array.isArray(key) ? `(${key.join('|')})` : key
 
   const jiraKeyRegex = new RegExp(`(${keys}-[0-9]+)`, 'g')
   let match
   const jiraIssues = []
-  // tslint:disable-next-line:no-conditional-assignment
   let jiraLocation
   switch (location) {
     case 'title': {
-      jiraLocation = danger.github.pr.title
+      jiraLocation = {
+        'github': danger?.github?.pr?.title,
+        'gitlab': danger?.gitlab?.mr?.title
+      }[repositoryType]
       break
     }
     case 'branch': {
-      jiraLocation = danger.github.pr.head.ref
+      jiraLocation = {
+        'github': danger?.github?.pr?.head?.ref,
+        'gitlab': danger?.gitlab?.mr?.source_branch
+      }[repositoryType]
       break
     }
     default: {
