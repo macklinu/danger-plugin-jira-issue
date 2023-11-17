@@ -1,4 +1,4 @@
-# Created by https://www.gitignore.io/api/node
+# Created by https://www.gitignore.io/api/node,visualstudiocode
 
 ### Node ###
 # Logs
@@ -67,3 +67,13 @@ dist/
 
 # Generated documentation
 docs/
+
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# End of https://www.gitignore.io/api/node,visualstudiocode
